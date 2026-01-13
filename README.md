@@ -1,208 +1,307 @@
-# Campus Assist
+# Campus Assist - Web Application
 
-## 📋 Project Description
+## 🎓 Project Overview
 
-**Campus Assist** is a desktop application designed to help students navigate campus life more efficiently. Built as a hackathon prototype, this application provides quick access to faculty information, real-time availability status, and campus service locations with an advanced search-based discovery system.
+**Campus Assist** is a web-based smart campus helper designed for the **GDG Campus Hackathon**. It helps students find faculty members, check their real-time availability, and locate campus services efficiently.
 
-Students can easily:
-- **Search for faculty** by name, department, subject, role, or room number
-- Check which faculty members are currently available or in class
-- Find where to go for specific administrative tasks (bonafide certificates, fee payments, ID cards, etc.)
-- Get helpful tips based on why they're looking for faculty
+### 🌟 Key Features
 
-## ✨ Features
+- **🔍 Smart Faculty Search** - Search by name, department, subject, role, or room number
+- **⏰ Real-time Availability** - Check if faculty are currently available or in class
+- **📊 Live Data Sync** - All data fetched from Google Sheets in real-time
+- **📅 Google Calendar Concept** - Availability based on teaching schedules (Google Calendar logic)
+- **🏢 Campus Services** - Directory of campus offices and their locations
 
-### 1. **Smart Faculty Search**
-- **Advanced Search Bar**: Search by name, department, subject, role, or room
-  - Example: Type "DBMS" → finds Database faculty
-  - Example: Type "HOD" → finds department heads
-  - Example: Type "CS-201" → finds faculty in that room
-- **Live Filtering**: Results update as you type (case-insensitive, partial matching)
-- **Search Results Display**: Shows Name | Department | Role for easy identification
-- **Enhanced Faculty Data**: Each faculty includes:
-  - Name and Department
-  - Subject taught (e.g., DBMS, AI, Thermodynamics)
-  - Role/Post (e.g., HOD, Lab Incharge, Project Coordinator)
-  - Room/Office number
-  - Real-time availability status
-- **Purpose Buttons**: Quick-access buttons for common needs:
-  - Subject Doubt
-  - Internship Approval
-  - Project Guidance
-  - Administrative Work
-  - Each provides helpful tips when clicked
+---
 
-### 2. **Campus Services Directory**
-- Browse a comprehensive list of 10 campus services
-- View detailed information for each service:
-  - Office name
-  - Room location
-  - Working hours
-- Services include:
-  - Bonafide Certificate
-  - Fee Payment & Issues
-  - ID Card
-  - Library Card
-  - Exam Forms
-  - Transcript & Marksheet
-  - Hostel Admission
-  - Scholarship Information
-  - Grievance & Complaints
-  - Sports Facilities
+## 🚀 Google Technology Integration
 
-### 3. **Professional User Interface**
-- **Resizable Window**: 900x600 default, fully resizable (minimum 800x500)
-- **Frame-Based Navigation**: Smooth transitions between screens
-- **Back to Home Buttons**: Easy navigation from all screens
-- **Mouse Wheel Scrolling**: Natural scrolling on all lists and panels
-  - Works on Windows and Linux
-  - Hover and scroll - no clicking needed
-- **Responsive Layout**: Adapts to window resizing
-- **Color-Coded Status**: Green for available, red for unavailable
-- **Scrollable Content**: All long content areas support scrolling
+This project demonstrates the use of **Google technologies** as required for the GDG Campus Hackathon:
 
-## 🛠️ Tech Stack
+### 1. **Google Sheets as Live Backend**
+- Faculty data stored in Google Sheets
+- Timetable/schedule data in separate Google Sheet
+- No hardcoded data - everything synced live
+- Easy to update by campus administrators
+- Collaborative editing capabilities
 
-- **Language**: Python 3.x
-- **GUI Framework**: Tkinter (built-in with Python)
-- **Data Storage**: JSON files (local storage)
-- **Libraries Used**:
-  - `tkinter` - GUI development
-  - `json` - Data handling
-  - `datetime` - Time-based availability checking
+### 2. **Google Calendar Concept**
+- Faculty availability determined using Google Calendar-based logic
+- Teaching schedules represent calendar events
+- In production, would integrate with Google Calendar API
+- Current implementation simulates real-time calendar checking
 
-## 📁 Project Structure
+**Google Sheets Used:**
+- **Faculty Data Sheet**: Contains Name, Department, Subject, Role, Room
+- **Timetable Sheet**: Contains Name, Day, Start, End (teaching schedules)
+
+---
+
+## 📋 Prerequisites
+
+- Python 3.8 or higher
+- pip (Python package manager)
+- Internet connection (to fetch data from Google Sheets)
+
+---
+
+## 🛠️ Local Setup & Installation
+
+### Step 1: Clone the Repository
+
+```bash
+git clone <your-repo-url>
+cd Beyonders-Project
+```
+
+### Step 2: Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+This will install:
+- `streamlit` - Web application framework
+- `pandas` - Data manipulation and CSV parsing
+
+### Step 3: Run the Application
+
+```bash
+streamlit run app.py
+```
+
+The application will open in your default browser at `http://localhost:8501`
+
+---
+
+## 🌐 Deployment to Streamlit Cloud
+
+### Step 1: Prepare Your Repository
+
+1. **Create a GitHub repository** (if not already done)
+2. **Push your code** to GitHub:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit - Campus Assist web app"
+   git branch -M main
+   git remote add origin <your-github-repo-url>
+   git push -u origin main
+   ```
+
+### Step 2: Deploy on Streamlit Community Cloud
+
+1. **Go to** [share.streamlit.io](https://share.streamlit.io)
+2. **Sign in** with your GitHub account
+3. **Click** "New app"
+4. **Select** your repository: `Beyonders-Project`
+5. **Set** main file path: `app.py`
+6. **Click** "Deploy"
+
+### Step 3: Get Your Live URL
+
+After deployment (usually takes 2-3 minutes), you'll receive a public URL like:
+```
+https://your-app-name.streamlit.app
+```
+
+**Share this URL for your hackathon demo!**
+
+---
+
+## 📊 Google Sheets Configuration
+
+The application uses two Google Sheets as the data source:
+
+### Faculty Data Sheet
+**URL:** [Faculty Data](https://docs.google.com/spreadsheets/d/16xBC5BLVAxGS1wSs8yoYNOEGQs8NtlUjgvZl5O1rZtA/edit#gid=0)
+
+**Structure:**
+| Name | Department | Subject | Role | Room |
+|------|------------|---------|------|------|
+| Dr. Rajesh Kumar | Computer Science | Database Management Systems (DBMS) | HOD | CS-201 |
+| Prof. Priya Sharma | Electronics | Digital Signal Processing | Professor | EC-105 |
+
+### Timetable Sheet
+**URL:** [Faculty Timetable](https://docs.google.com/spreadsheets/d/1lQoalBwyKMYG0qlUj7BT_nNbPXuNrFfW7BFkzaY-r58/edit#gid=0)
+
+**Structure:**
+| Name | Day | Start | End |
+|------|-----|-------|-----|
+| Dr. Rajesh Kumar | Monday | 09:00 | 10:30 |
+| Dr. Rajesh Kumar | Monday | 14:00 | 15:30 |
+
+### How to Update Data
+
+1. **Open the Google Sheet** (must have edit access)
+2. **Edit the data** directly in the sheet
+3. **Save** (auto-saves in Google Sheets)
+4. **Refresh the web app** - data will update automatically (cached for 5 minutes)
+
+### Creating Your Own Sheets
+
+If you want to use your own Google Sheets:
+
+1. **Create a new Google Sheet**
+2. **Add the columns** as shown above
+3. **Fill in your data**
+4. **Set sharing** to "Anyone with the link → Viewer"
+5. **Get the CSV export URL**:
+   - Format: `https://docs.google.com/spreadsheets/d/<SHEET_ID>/export?format=csv`
+   - Replace `<SHEET_ID>` with your sheet's ID (from the URL)
+6. **Update** the URLs in `app.py`:
+   ```python
+   FACULTY_SHEET_URL = "your-faculty-sheet-csv-url"
+   TIMETABLE_SHEET_URL = "your-timetable-sheet-csv-url"
+   ```
+
+---
+
+## 🎯 How to Use the Application
+
+### 1. **Home Page**
+- Overview of the application
+- Explanation of Google technology integration
+- Navigation instructions
+
+### 2. **Find Faculty**
+- **Search Bar**: Type any keyword (name, department, subject, role, room)
+  - Example: "Computer Science" → finds all CS faculty
+  - Example: "DBMS" → finds faculty teaching DBMS
+  - Example: "HOD" → finds department heads
+  - Example: "CS-201" → finds faculty in that room
+- **Search Results**: Click "View Details" on any faculty
+- **Faculty Details**: See complete information and current availability
+- **Availability Status**:
+  - ✅ Available (Based on Google Calendar)
+  - 🔴 In Class (09:00 - 10:30) (Based on Google Calendar)
+
+### 3. **Campus Services**
+- Browse campus offices and services
+- Find room locations and working hours
+
+---
+
+## 🏗️ Project Structure
 
 ```
 Beyonders-Project/
 │
-├── data/
-│   ├── faculty.json          # Faculty information with subjects and roles
-│   ├── timetable.json         # Teaching schedules
-│   └── offices.json           # Campus services data
+├── app.py                    # Main Streamlit application
+├── requirements.txt          # Python dependencies
+├── .gitignore               # Git ignore file
+├── README.md                # This file
 │
-├── logic/
-│   └── availability.py        # Availability checking logic
+├── data/                    # Original JSON data (legacy)
+│   ├── faculty.json
+│   ├── timetable.json
+│   └── offices.json
 │
-├── ui/
-│   └── app.py                 # Main application UI with search feature
+├── logic/                   # Original availability logic (legacy)
+│   └── availability.py
 │
-└── README.md                  # Project documentation
+└── ui/                      # Original Tkinter UI (legacy)
+    └── app.py
 ```
 
-## 🚀 How to Run the Application
+**Note:** The `data/`, `logic/`, and `ui/` folders contain the original Tkinter desktop application code. The new web application is entirely in `app.py`.
 
-### Prerequisites
-- Python 3.6 or higher installed on your system
-- Tkinter (usually comes pre-installed with Python)
+---
 
-### Steps to Run
+## 🔧 Technical Details
 
-1. **Navigate to the project directory**:
-   ```bash
-   cd Beyonders-Project
-   ```
+### Technologies Used
+- **Frontend/Backend**: Streamlit (Python web framework)
+- **Data Source**: Google Sheets (via CSV export)
+- **Data Processing**: Pandas
+- **Deployment**: Streamlit Community Cloud
 
-2. **Run the application**:
-   ```bash
-   python ui/app.py
-   ```
-   
-   Or on some systems:
-   ```bash
-   python3 ui/app.py
-   ```
+### How It Works
 
-3. **Using the Application**:
-   - The main menu will appear with three options
-   - Click **"Find Faculty"** to search for faculty and check availability
-   - Click **"Campus Services"** to browse campus offices
-   - Click **"Exit"** to close the application
+1. **Data Loading**:
+   - App fetches CSV data from Google Sheets URLs
+   - Data is cached for 5 minutes to reduce API calls
+   - Pandas parses CSV into DataFrames
 
-### Using the Search Feature
+2. **Search Functionality**:
+   - Case-insensitive partial matching
+   - Searches across all fields: Name, Department, Subject, Role, Room
+   - Real-time filtering as you type
 
-1. **Search Faculty**:
-   - Type in the search bar (e.g., "Computer", "DBMS", "HOD", "204")
-   - Results filter automatically as you type
-   - Click on any result to view full details
+3. **Availability Logic** (Google Calendar Concept):
+   - Gets current day and time
+   - Matches faculty name in timetable
+   - Checks if current time falls within any teaching slot
+   - Returns availability status with Google Calendar reference
 
-2. **Purpose Buttons**:
-   - Click a purpose button to get helpful tips
-   - Check faculty availability below
+4. **UI/UX**:
+   - Sidebar navigation between pages
+   - Responsive layout with Streamlit columns
+   - Session state for selected faculty
+   - Clean, intuitive interface
 
-3. **Mouse Scrolling**:
-   - Hover over any list or panel
-   - Scroll with your mouse wheel naturally
+---
 
-## 📊 Sample Data
+## 📱 Demo & Screenshots
 
-The application comes pre-loaded with sample data:
-- **8 Faculty Members** across different departments (CS, Electronics, Mathematics, Physics, Chemistry, Mechanical, Civil)
-- **Enhanced Faculty Data**: Each includes subject taught and role/post
-- **Teaching Schedules** for each faculty member
-- **10 Campus Services** with office locations and working hours
+### Live Demo
+**URL:** [Your deployed Streamlit app URL here]
 
-You can modify the JSON files in the `data/` folder to customize the information for your campus.
+### Screenshots
+*(Add screenshots after deployment)*
 
-## 🎯 Key Improvements
+---
 
-### Implemented Features
-✅ **Search-Based Discovery**: Find faculty by multiple criteria
-✅ **Live Filtering**: Real-time search results
-✅ **Enhanced Data**: Subject and role fields for all faculty
-✅ **Purpose Buttons**: Contextual help for students
-✅ **Resizable Window**: Professional, flexible UI
-✅ **Mouse Wheel Scrolling**: Natural scrolling on all scrollable areas
-✅ **Frame-Based Navigation**: Smooth screen transitions
-✅ **Responsive Layout**: Adapts to window size
+## 🎓 GDG Campus Hackathon Compliance
 
-### Future Enhancements
+### Google Technology Usage ✅
 
-1. **Mobile Application**
-   - Develop Android/iOS versions using frameworks like Kivy or React Native
-   - Add push notifications for faculty availability changes
+1. **Google Sheets**:
+   - ✅ Used as primary data source
+   - ✅ Live data fetching (not hardcoded)
+   - ✅ Demonstrates cloud-based data management
 
-2. **Advanced Features**
-   - Add faculty contact information (email, phone)
-   - Include campus maps with visual navigation
-   - Add student feedback/rating system
+2. **Google Calendar Concept**:
+   - ✅ Availability logic based on calendar events
+   - ✅ Teaching schedules represent calendar entries
+   - ✅ Clear documentation of Google Calendar integration approach
+   - ✅ Production-ready architecture (can be extended with Calendar API)
+
+### Problem Solved
+- **Real Campus Problem**: Students struggle to find faculty and know when they're available
+- **Solution**: Centralized, searchable directory with real-time availability
+- **Impact**: Saves time, reduces confusion, improves campus navigation
+
+---
+
+## 🚀 Future Enhancements
+
+1. **Google Calendar API Integration**
+   - Real-time sync with faculty Google Calendars
+   - Automatic availability updates
+   - Meeting scheduling
+
+2. **Additional Google Services**
+   - Google Maps integration for campus navigation
+   - Google Forms for feedback collection
+   - Google Drive for document storage
+
+3. **Enhanced Features**
+   - Email notifications (Gmail API)
    - Appointment booking system
+   - Mobile-responsive design improvements
+   - Faculty contact information
 
-3. **Data Management**
-   - Admin panel to update faculty and service information
-   - Database integration (SQLite/MySQL)
-   - Import/export functionality for bulk updates
-
-4. **Additional Modules**
-   - Event calendar for campus activities
-   - Bus/transport schedules
-   - Canteen menu and timings
-   - Emergency contacts directory
+---
 
 ## 👥 Target Users
 
-- **Students**: Primary users looking for faculty and campus services
-- **New Students**: Especially helpful during orientation
-- **Parents/Visitors**: Can use during campus visits
+- **Students**: Find faculty and check availability
+- **New Students**: Navigate campus during orientation
+- **Faculty**: Share their schedules and availability
+- **Administrators**: Manage campus information centrally
 
-## 🎓 Why This Design?
-
-### Realistic User Scenario
-Students often don't remember exact faculty names but remember:
-- "The HOD of CSE department"
-- "The professor who teaches DBMS"
-- "The faculty in room 204"
-- "The internship coordinator"
-
-### User Experience Benefits
-1. **Faster Discovery**: Type what you remember instead of scrolling
-2. **Multiple Entry Points**: Search by any field
-3. **Contextual Help**: Purpose buttons provide guidance
-4. **Professional Feel**: Smooth scrolling and responsive design
-
-## 🤝 Contributing
-
-This is a hackathon project built for educational purposes. Feel free to fork and enhance it for your own campus!
+---
 
 ## 📝 License
 
@@ -210,6 +309,18 @@ This project is open-source and available for educational use.
 
 ---
 
-**Built with ❤️ for the Beyonders Hackathon**
+## 🤝 Contributing
 
-*Making campus navigation easier, one search at a time!*
+This is a hackathon project. Feel free to fork and enhance it for your campus!
+
+---
+
+## 📧 Contact
+
+For questions or feedback about this project, please reach out through the hackathon platform.
+
+---
+
+**Built with ❤️ for the GDG Campus Hackathon**
+
+*Powered by Google Sheets, Google Calendar Concept, and Streamlit*
