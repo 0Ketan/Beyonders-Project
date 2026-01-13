@@ -1,0 +1,167 @@
+[
+    {
+        "faculty_id": 1,
+        "schedule": [
+            {
+                "day": "Monday",
+                "start_time": "09:00",
+                "end_time": "10:30"
+            },
+            {
+                "day": "Monday",
+                "start_time": "14:00",
+                "end_time": "15:30"
+            },
+            {
+                "day": "Wednesday",
+                "start_time": "10:00",
+                "end_time": "11:30"
+            },
+            {
+                "day": "Friday",
+                "start_time": "09:00",
+                "end_time": "10:30"
+            }
+        ]
+    },
+    {
+        "faculty_id": 2,
+        "schedule": [
+            {
+                "day": "Tuesday",
+                "start_time": "11:00",
+                "end_time": "12:30"
+            },
+            {
+                "day": "Thursday",
+                "start_time": "09:00",
+                "end_time": "10:30"
+            },
+            {
+                "day": "Friday",
+                "start_time": "14:00",
+                "end_time": "15:30"
+            }
+        ]
+    },
+    {
+        "faculty_id": 3,
+        "schedule": [
+            {
+                "day": "Monday",
+                "start_time": "11:00",
+                "end_time": "12:30"
+            },
+            {
+                "day": "Wednesday",
+                "start_time": "09:00",
+                "end_time": "10:30"
+            },
+            {
+                "day": "Thursday",
+                "start_time": "14:00",
+                "end_time": "15:30"
+            }
+        ]
+    },
+    {
+        "faculty_id": 4,
+        "schedule": [
+            {
+                "day": "Tuesday",
+                "start_time": "09:00",
+                "end_time": "10:30"
+            },
+            {
+                "day": "Tuesday",
+                "start_time": "14:00",
+                "end_time": "15:30"
+            },
+            {
+                "day": "Thursday",
+                "start_time": "11:00",
+                "end_time": "12:30"
+            }
+        ]
+    },
+    {
+        "faculty_id": 5,
+        "schedule": [
+            {
+                "day": "Monday",
+                "start_time": "10:00",
+                "end_time": "11:30"
+            },
+            {
+                "day": "Wednesday",
+                "start_time": "14:00",
+                "end_time": "15:30"
+            },
+            {
+                "day": "Friday",
+                "start_time": "11:00",
+                "end_time": "12:30"
+            }
+        ]
+    },
+    {
+        "faculty_id": 6,
+        "schedule": [
+            {
+                "day": "Tuesday",
+                "start_time": "10:00",
+                "end_time": "11:30"
+            },
+            {
+                "day": "Thursday",
+                "start_time": "09:00",
+                "end_time": "10:30"
+            },
+            {
+                "day": "Friday",
+                "start_time": "14:00",
+                "end_time": "15:30"
+            }
+        ]
+    },
+    {
+        "faculty_id": 7,
+        "schedule": [
+            {
+                "day": "Monday",
+                "start_time": "14:00",
+                "end_time": "15:30"
+            },
+            {
+                "day": "Wednesday",
+                "start_time": "11:00",
+                "end_time": "12:30"
+            },
+            {
+                "day": "Friday",
+                "start_time": "09:00",
+                "end_time": "10:30"
+            }
+        ]
+    },
+    {
+        "faculty_id": 8,
+        "schedule": [
+            {
+                "day": "Tuesday",
+                "start_time": "14:00",
+                "end_time": "15:30"
+            },
+            {
+                "day": "Thursday",
+                "start_time": "10:00",
+                "end_time": "11:30"
+            },
+            {
+                "day": "Friday",
+                "start_time": "11:00",
+                "end_time": "12:30"
+            }
+        ]
+    }
+]
