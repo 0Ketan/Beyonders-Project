@@ -16,6 +16,8 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timezone, timedelta
 import requests
+import os
+import google.generativeai as genai
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # GOOGLE SHEETS CONFIGURATION
@@ -39,6 +41,24 @@ GOOGLE_CALENDAR_ID = "cee6954b0d57fcc80568fbb73b028f41eb9025730e0d27e48c2cbe2476
 
 # Google Calendar API Key - Read-only access to public calendar
 GOOGLE_CALENDAR_API_KEY = "AIzaSyCtI8MeiXXVbrKiUwndC6dqpe4y7VmF5Gs"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# GOOGLE GEMINI AI CONFIGURATION
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Configure Gemini API Key
+# Priority 1: OS Environment Variable (Local Development)
+# Priority 2: Streamlit Secrets (Cloud Deployment)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+if not GEMINI_API_KEY:
+    try:
+        # Check Streamlit secrets if not found in env vars
+        GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
+    except (FileNotFoundError, KeyError):
+        # Key remains None if not found in either
+        pass
+
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # PAGE CONFIGURATION
@@ -735,6 +755,74 @@ def display_labs_directory_page():
                 st.write(lab_info['Description'])
 
 
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# AI ASSISTANT PAGE
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+def display_ai_assistant_page():
+    """Display the AI Assistant page using Google Gemini."""
+    
+    st.title("🤖 Ask Campus Assist (AI)")
+    st.markdown("Powered by **Google Gemini**")
+    
+    # Check for API Key
+    if not GEMINI_API_KEY:
+        st.warning("⚠️ Google Gemini API Key not found. Please set `GEMINI_API_KEY` in your environment variables or Streamlit secrets.")
+        st.info("To test this feature, you need a valid Google Gemini API key.")
+        return
+
+    # Initialize Gemini
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        model = genai.GenerativeModel('gemini-pro')
+    except Exception as e:
+        st.error(f"Error configuring Google Gemini: {e}")
+        return
+
+    st.markdown("""
+    I am your AI Campus Assistant! Ask me about:
+    - 👨‍🏫 **Faculty** details and roles
+    - 🏢 **Campus Services** and offices
+    - 🔬 **Labs** and facilities
+    - 🎓 **General** college procedures
+    """)
+    
+    st.markdown("---")
+
+    # User Input
+    user_question = st.text_input("How can I help you today?", placeholder="e.g., Where is the admission office? Who is the HOD of CSE?")
+    
+    if st.button("Ask AI", type="primary"):
+        if not user_question:
+            st.warning("Please enter a question.")
+            return
+            
+        with st.spinner("Thinking..."):
+            try:
+                # Context for the AI
+                system_prompt = """
+                You are a helpful campus assistant for a university. 
+                Provide clear, concise, and polite answers to student questions related to college services, academics, and campus facilities.
+                If a question is completely unrelated to college/campus life, politely decline to answer.
+                Keep answers short and helpful.
+                """
+                
+                # Create prompt with context
+                full_prompt = f"{system_prompt}\n\nStudent Question: {user_question}"
+                
+                # Generate response
+                response = model.generate_content(full_prompt)
+                
+                # Display response
+                st.markdown("### 🤖 Response:")
+                st.success(response.text)
+                
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+                st.markdown("*Note: Please ensure your API key is valid and has access to Gemini API.*")
+
+
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # MAIN APPLICATION
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -752,7 +840,7 @@ def main():
     
     page = st.sidebar.radio(
         "Navigation",
-        ["Home", "Find Faculty", "Campus Services", "Labs Directory"]
+        ["Home", "Find Faculty", "Campus Services", "Labs Directory", "Ask Campus Assist (AI)"]
     )
     
     st.sidebar.markdown("---")
@@ -761,7 +849,8 @@ def main():
         "Campus Assist helps students find faculty and check their availability in real-time.\n\n"
         "**Powered by:**\n"
         "- 📊 Google Sheets\n"
-        "- 📅 Google Calendar (Concept)\n"
+        "- 📅 Google Calendar API\n"
+        "- 🤖 Google Gemini AI\n"
         "- 🚀 Streamlit"
     )
     
@@ -774,6 +863,8 @@ def main():
         display_campus_services_page()
     elif page == "Labs Directory":
         display_labs_directory_page()
+    elif page == "Ask Campus Assist (AI)":
+        display_ai_assistant_page()
 
 
 if __name__ == "__main__":

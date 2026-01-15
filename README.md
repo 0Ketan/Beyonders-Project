@@ -22,6 +22,7 @@ Campus Assist solves these problems by providing a unified, search-based interfa
 *   **Find Faculty with Real-Time Availability:** Search for faculty members by name, department, or subject. View their current status (Available / In Class) based on live schedule data.
 *   **Campus Services Directory:** A searchable directory of administrative offices and student services, including location details and descriptions.
 *   **Labs Directory:** Easy access to information about various university laboratories, organized by department and building.
+*   **Ask Campus Assist (AI):** An AI-powered assistant that answers student questions about faculty, services, and general campus procedures.
 *   **Multi-Field Search:** Powerful search filters allow users to query across names, roles, room numbers, and descriptions.
 *   **Live Data Updates:** The system is connected to live cloud-based data sheets, ensuring that any administrative updates are immediately reflected in the application.
 
@@ -31,6 +32,7 @@ This project leverages the Google ecosystem to create a scalable, low-maintenanc
 
 *   **Google Sheets:** Utilized as the primary backend database for storing faculty directories, service listings, and lab information. This allows non-technical campus staff to easily update records without needing to redeploy the application.
 *   **Google Calendar:** Integrated to determine real-time faculty availability. The application queries a shared Google Calendar to identify teaching schedules and events, dynamically updating the status shown to students.
+*   **Google Gemini AI:** Powers the "Ask Campus Assist" smart helper, providing natural language answers to student queries using the Gemini Pro model.
 *   **Streamlit Cloud:** Used for hosting and deploying the application, providing a fast and reliable web interface accessible from any device.
 
 ## 6. Architecture Overview
