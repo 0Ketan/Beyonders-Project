@@ -9,7 +9,7 @@
 - **🔍 Smart Faculty Search** - Search by name, department, subject, role, or room number
 - **⏰ Real-time Availability** - Check if faculty are currently available or in class
 - **📊 Live Data Sync** - All data fetched from Google Sheets in real-time
-- **📅 Google Calendar Concept** - Availability based on teaching schedules (Google Calendar logic)
+- **📅 Google Calendar API** - Availability fetched from live Google Calendar events
 - **🏢 Campus Services** - Directory of campus offices and their locations
 
 ---
@@ -20,20 +20,23 @@ This project demonstrates the use of **Google technologies** as required for the
 
 ### 1. **Google Sheets as Live Backend**
 - Faculty data stored in Google Sheets
-- Timetable/schedule data in separate Google Sheet
 - No hardcoded data - everything synced live
 - Easy to update by campus administrators
 - Collaborative editing capabilities
 
-### 2. **Google Calendar Concept**
-- Faculty availability determined using Google Calendar-based logic
-- Teaching schedules represent calendar events
-- In production, would integrate with Google Calendar API
-- Current implementation simulates real-time calendar checking
+### 2. **Google Calendar API**
+- Real-time faculty availability from Google Calendar API
+- Shared public calendar with teaching events
+- Event titles parsed to identify faculty (e.g., "Faculty Name – Class Description")
+- Current time compared with event schedules for availability
 
 **Google Sheets Used:**
 - **Faculty Data Sheet**: Contains Name, Department, Subject, Role, Room
-- **Timetable Sheet**: Contains Name, Day, Start, End (teaching schedules)
+
+**Google Calendar:**
+- **Calendar ID**: `cee6954b0d57fcc80568fbb73b028f41eb9025730e0d27e48c2cbe2476a6be66@group.calendar.google.com`
+- **API Key**: Public read-only access
+- Events contain faculty teaching schedules
 
 ---
 
@@ -63,6 +66,7 @@ pip install -r requirements.txt
 This will install:
 - `streamlit` - Web application framework
 - `pandas` - Data manipulation and CSV parsing
+- `requests` - HTTP library for Google Calendar API calls
 
 ### Step 3: Run the Application
 
@@ -138,9 +142,9 @@ The application uses two Google Sheets as the data source:
 3. **Save** (auto-saves in Google Sheets)
 4. **Refresh the web app** - data will update automatically (cached for 5 minutes)
 
-### Creating Your Own Sheets
+### Creating Your Own Faculty Sheet
 
-If you want to use your own Google Sheets:
+If you want to use your own Google Sheet for faculty data:
 
 1. **Create a new Google Sheet**
 2. **Add the columns** as shown above
@@ -152,7 +156,29 @@ If you want to use your own Google Sheets:
 6. **Update** the URLs in `app.py`:
    ```python
    FACULTY_SHEET_URL = "your-faculty-sheet-csv-url"
-   TIMETABLE_SHEET_URL = "your-timetable-sheet-csv-url"
+   ```
+
+### Setting Up Google Calendar
+
+To use your own Google Calendar:
+
+1. **Create a Google Calendar** or use an existing one
+2. **Add teaching events** with titles in format: "Faculty Name – Class Description"
+   - Example: "Dr. John Smith – Database Systems Lecture"
+3. **Make the calendar public**:
+   - Calendar settings → Access permissions → Make available to public
+4. **Get Calendar ID**:
+   - Settings → Integrate calendar → Calendar ID
+5. **Get Google Calendar API Key**:
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a project or use existing
+   - Enable Google Calendar API
+   - Create credentials → API Key
+   - Restrict key to Calendar API only (recommended)
+6. **Update configuration in `app.py`**:
+   ```python
+   GOOGLE_CALENDAR_ID = "your-calendar-id@group.calendar.google.com"
+   GOOGLE_CALENDAR_API_KEY = "your-api-key"
    ```
 
 ---
@@ -228,11 +254,11 @@ Beyonders-Project/
    - Searches across all fields: Name, Department, Subject, Role, Room
    - Real-time filtering as you type
 
-3. **Availability Logic** (Google Calendar Concept):
-   - Gets current day and time
-   - Matches faculty name in timetable
-   - Checks if current time falls within any teaching slot
-   - Returns availability status with Google Calendar reference
+3. **Availability Logic** (Google Calendar API):
+   - Fetches today's events from Google Calendar API
+   - Parses event titles to extract faculty names
+   - Checks if current time falls within any teaching event
+   - Returns availability status with event times
 
 4. **UI/UX**:
    - Sidebar navigation between pages
@@ -261,11 +287,11 @@ Beyonders-Project/
    - ✅ Live data fetching (not hardcoded)
    - ✅ Demonstrates cloud-based data management
 
-2. **Google Calendar Concept**:
-   - ✅ Availability logic based on calendar events
-   - ✅ Teaching schedules represent calendar entries
-   - ✅ Clear documentation of Google Calendar integration approach
-   - ✅ Production-ready architecture (can be extended with Calendar API)
+2. **Google Calendar API**:
+   - ✅ Real-time availability from Google Calendar
+   - ✅ Live event fetching and parsing
+   - ✅ Shared public calendar integration
+   - ✅ Event-based availability determination
 
 ### Problem Solved
 - **Real Campus Problem**: Students struggle to find faculty and know when they're available
