@@ -238,11 +238,31 @@ def check_faculty_availability(faculty_name):
     This function fetches live events from the shared Google Calendar and determines
     faculty availability by checking if they have any teaching events happening now.
     
+    CAMPUS WORKING HOURS:
+    ---------------------
+    College is open from 7:00 AM to 5:00 PM.
+    Faculty are automatically unavailable outside these hours.
+    
+    WEEKLY HOLIDAY:
+    ---------------
+    Sunday is a weekly holiday.
+    All faculty are unavailable on Sundays.
+    
+    Priority Order:
+    1. Sunday holiday check (highest priority)
+    2. Campus working hours check (7 AM - 5 PM)
+    3. Google Calendar class schedule check
+    4. Default available status
+    
     Process:
-    1. Fetch all events for today from Google Calendar API
-    2. Parse event titles to extract faculty names
-    3. Check if current time overlaps with any event for this faculty
-    4. Return availability status
+    1. Check if today is Sunday (weekly holiday)
+    2. If Sunday, return unavailable status immediately
+    3. Check if current time is within campus working hours (7 AM - 5 PM)
+    4. If outside working hours, return unavailable status immediately
+    5. If within working hours, fetch events from Google Calendar API
+    6. Parse event titles to extract faculty names
+    7. Check if current time overlaps with any event for this faculty
+    8. Return availability status
     
     Args:
         faculty_name (str): Name of the faculty member
@@ -254,6 +274,51 @@ def check_faculty_availability(faculty_name):
             'error': bool (True if API call failed)
         }
     """
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 1: Check Sunday Holiday (HIGHEST PRIORITY)
+    # ═══════════════════════════════════════════════════════════════════════════
+    # Weekly holiday: Sunday
+    # Faculty unavailable on Sundays
+    
+    # Get current time (IST - UTC+5:30)
+    ist = timezone(timedelta(hours=5, minutes=30))
+    now = datetime.now(ist)
+    current_weekday = now.weekday()  # Monday=0, Sunday=6
+    
+    # Check if today is Sunday (weekday = 6)
+    if current_weekday == 6:
+        return {
+            'available': False,
+            'status': '🔒 Unavailable (Holiday)',
+            'error': False
+        }
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 2: Check Campus Working Hours
+    # ═══════════════════════════════════════════════════════════════════════════
+    # Campus working hours: 7 AM – 5 PM
+    # Outside working hours, faculty are unavailable
+    
+    current_hour = now.hour
+    current_minute = now.minute
+    
+    # Define campus working hours
+    COLLEGE_OPEN_HOUR = 7   # 7:00 AM
+    COLLEGE_CLOSE_HOUR = 17  # 5:00 PM (17:00 in 24-hour format)
+    
+    # Check if current time is outside working hours
+    # Before 7:00 AM or at/after 5:00 PM
+    if current_hour < COLLEGE_OPEN_HOUR or current_hour >= COLLEGE_CLOSE_HOUR:
+        return {
+            'available': False,
+            'status': '🔒 Unavailable (College Closed - Hours: 7 AM to 5 PM)',
+            'error': False
+        }
+    
+    # ═══════════════════════════════════════════════════════════════════════════
+    # STEP 3: Check Google Calendar (only during working hours and non-holidays)
+    # ═══════════════════════════════════════════════════════════════════════════
+    
     # Fetch events from Google Calendar
     events = fetch_calendar_events()
     
@@ -264,10 +329,6 @@ def check_faculty_availability(faculty_name):
             'status': '❌ Unable to fetch calendar data',
             'error': True
         }
-    
-    # Get current time (IST - UTC+5:30)
-    ist = timezone(timedelta(hours=5, minutes=30))
-    now = datetime.now(ist)
     
     # Check each event to see if faculty is currently in class
     for event in events:
