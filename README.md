@@ -1,60 +1,69 @@
 # Campus Assist
+### ATLAS – GDG on Campus Hackathon
 
 ## 1. Project Overview
 
-Campus Assist is a centralized, web-based platform designed to assist university students in navigating campus resources efficiently. Built for the ATLAS – GDG on Campus Hackathon, this open innovation project simplifies the daily interactions between students and the complex university ecosystem, ensuring that essential information regarding faculty, services, and facilities is accessible in real-time.
+Campus Assist is a live, deployed web application designed to solve the everyday challenges of navigating a large university campus. Built as a practical Minimum Viable Product (MVP) for the ATLAS – GDG on Campus Hackathon, this project helps students efficiently find faculty based on real-time availability, locate campus services, and get instant answers to campus-related queries via an AI assistant. It integrates directly with Google's ecosystem to provide a scalable, low-maintenance solution for real-world campus use.
 
 ## 2. Problem Statement
 
-Navigating a large university campus allows for significant friction and inefficiency. Common challenges faced by students include:
+Navigating specialized university resources is often inefficient. Common friction points include:
 
-*   **Difficulty Finding Faculty:** Students often struggle to locate faculty members or determine if they are currently in their offices, leading to wasted time walking across campus.
-*   **Uncertain Availability:** Static timetables are often outdated or hard to interpret quickly, resulting in students waiting for faculty who are in class or unavailable.
-*   **Campus Confusion:** New students frequently face confusion when trying to locate administrative services, labs, or specific departments.
-*   **Inefficiency:** The lack of a centralized information system leads to unnecessary delays in academic and administrative processes.
+*   **Difficulty Finding Faculty:** Students waste valuable time walking to offices only to find faculty members are unavailable or in class.
+*   **Decentralized Information:** Critical information about labs, services, and policies is often scattered or outdated.
+*   **Lack of Immediate Assistance:** New students frequently struggle to find answers to simple administrative questions without queuing at help desks.
+*   **Operational Inefficiency:** Manual directory updates are slow and often result in stale data.
 
 ## 3. Solution Overview
 
-Campus Assist solves these problems by providing a unified, search-based interface for campus information. It moves away from static, decentralized lists and offers a data-driven approach where information is queried in real-time. By integrating directly with live data sources, the application ensures that students have access to the most current information available regarding faculty locations, schedules, and campus services.
+Campus Assist streamlines campus operations by providing a unified, search-first interface. Instead of static lists, it uses a real-time data-driven approach. Faculty availability is checked live against teaching schedules, directories are synced instantly from administrative spreadsheets, and a Generative AI assistant provides 24/7 guidance, ensuring students always have the most accurate information.
 
 ## 4. Key Features
 
-*   **Find Faculty with Real-Time Availability:** Search for faculty members by name, department, or subject. View their current status (Available / In Class) based on live schedule data.
-*   **Campus Services Directory:** A searchable directory of administrative offices and student services, including location details and descriptions.
-*   **Labs Directory:** Easy access to information about various university laboratories, organized by department and building.
-*   **Ask Campus Assist (AI):** An AI-powered assistant that answers student questions about faculty, services, and general campus procedures.
-*   **Multi-Field Search:** Powerful search filters allow users to query across names, roles, room numbers, and descriptions.
-*   **Live Data Updates:** The system is connected to live cloud-based data sheets, ensuring that any administrative updates are immediately reflected in the application.
+*   **Find Faculty with LIVE Availability:** Search for faculty and instantly see if they are "Available" or "In Class," powered by real-time Google Calendar checks.
+*   **Ask Campus Assist (AI):** A smart, conversational assistant powered by Google Gemini that answers questions about faculty roles, campus services, and general procedures.
+*   **Campus Services Directory:** A searchable database of administrative offices and student support services.
+*   **Labs Directory:** Comprehensive listings of university laboratories, organized by building and department.
+*   **Live Data Sync:** All directory data is fetched live from Google Sheets, allowing for instant updates without code changes.
 
 ## 5. Google Technologies Used
 
-This project leverages the Google ecosystem to create a scalable, low-maintenance, and highly accessible solution:
+This project heavily leverages the Google ecosystem to create a robust, scalable architecture:
 
-*   **Google Sheets:** Utilized as the primary backend database for storing faculty directories, service listings, and lab information. This allows non-technical campus staff to easily update records without needing to redeploy the application.
-*   **Google Calendar:** Integrated to determine real-time faculty availability. The application queries a shared Google Calendar to identify teaching schedules and events, dynamically updating the status shown to students.
-*   **Google Gemini AI:** Powers the "Ask Campus Assist" smart helper, providing natural language answers to student queries using the Gemini Pro model.
-*   **Streamlit Cloud:** Used for hosting and deploying the application, providing a fast and reliable web interface accessible from any device.
+*   **Google Gemini (Generative AI):** Powers the "Ask Campus Assist" smart helper, utilizing the Gemini Pro model to understand and answer natural language student queries.
+*   **Google Calendar:** Serves as the real-time engine for faculty availability. The app queries a public calendar to identify teaching slots and dynamically update status.
+*   **Google Sheets:** Acts as the live backend database for faculty, services, and lab records, enabling non-technical staff to manage data easily.
+*   **Streamlit Cloud:** Provides the hosting and deployment platform, ensuring the application is accessible live on the web.
 
 ## 6. Architecture Overview
 
-The architecture of Campus Assist is designed for simplicity and maintainability:
+The system architecture prioritizes simplicity, maintainability, and real-time performance:
 
-1.  **Frontend:** Built with Streamlit (Python), providing a responsive and user-friendly web interface.
-2.  **Data Layer:** Google Sheets acts as a structured relational database, hosting the core datasets for faculty, services, and labs.
-3.  **Logic Layer:** The Python application fetches data using the Pandas library and interacts with the Google Calendar API to process time-based logic for availability.
-4.  **Deployment:** The application runs in a containerized environment on Streamlit Cloud, ensuring continuous availability.
+1.  **Frontend:** Streamlit (Python) provides a responsive, mobile-friendly user interface.
+2.  **AI Layer:** Google Gemini API processes natural language queries for the student assistant.
+3.  **Data Layer:** Google Sheets functions as a structured relational database for all directory information.
+4.  **Logic Layer:** The application integrates with the Google Calendar API to compute real-time availability status based on current time and event schedules.
+5.  **Deployment:** The solution is fully deployed on Streamlit Cloud for instant accessibility.
 
 ## 7. Live Demo
 
-You can access the live version of Campus Assist here:
+**Access the live application here:**
 
-**https://0ketan-beyonders-project-app-bezivc.streamlit.app/**
+[**https://0ketan-beyonders-project-app-bezivc.streamlit.app/**](https://0ketan-beyonders-project-app-bezivc.streamlit.app/)
 
-We encourage judges to try searching for faculty names or campus services to experience the real-time filtering capabilities.
+We encourage judges to try searching for a faculty member or asking the AI assistant a question about the campus.
 
-## 8. How to Run Locally
+## 8. Environment Variables & Security
 
-To run this project on your local machine, follow these steps:
+To maintain security, no sensitive keys are hardcoded in the application. The system requires the following environment variable:
+
+*   `GEMINI_API_KEY`: Required to authenticate with the Google Gemini API.
+
+This key is stored securely in the Streamlit Cloud "Secrets" management system for the production deployment.
+
+## 9. How to Run Locally
+
+To run this project on your local machine:
 
 1.  **Clone the Repository:**
     ```bash
@@ -63,46 +72,36 @@ To run this project on your local machine, follow these steps:
     ```
 
 2.  **Install Dependencies:**
-    Ensure you have Python installed, then run:
     ```bash
     pip install -r requirements.txt
     ```
 
-3.  **Run the Application:**
+3.  **Set Environment Variable:**
+    On Windows (PowerShell):
+    ```powershell
+    $env:GEMINI_API_KEY="your-google-gemini-api-key"
+    ```
+    On Mac/Linux:
+    ```bash
+    export GEMINI_API_KEY="your-google-gemini-api-key"
+    ```
+
+4.  **Run the Application:**
     ```bash
     streamlit run app.py
     ```
 
-4.  **Access the App:**
-    Open your browser and navigate to `http://localhost:8501`.
-
-## 9. Real-World Impact
-
-Campus Assist offers immediate and tangible benefits to the university community:
-
-*   **Saves Student Time:** Reduces the time spent physically checking for faculty availability or finding offices.
-*   **Reduces Confusion:** Provides a single source of truth for campus locations, particularly helping freshers settle in faster.
-*   **Scalable Solution:** The architecture can be easily adapted to other campuses or institutions with minimal configuration changes.
-
-Estimates suggest that a centralized system like this could save a student body hundreds of collective hours per semester in reduced transit and wait times.
-
 ## 10. Future Improvements
 
-We have a clear roadmap to evolve Campus Assist from a prototype into a comprehensive institutional tool:
+We have a strategic roadmap to evolve Campus Assist into a comprehensive institutional platform:
 
-*   **Interactive Campus Map Integration:** Integrate an interactive campus map to guide students directly to faculty rooms, labs, and service offices, improving navigation and reducing on-campus confusion.
-*   **Holiday & Academic Calendar Awareness:** Enhance availability logic by integrating academic calendars so the system automatically reflects holidays, events, and non-working days.
-*   **Production-Ready Institutional Data Integration:** Collaborate with campus administration to connect the app with official data sources, enabling real-time updates and real-world deployment beyond a prototype.
-*   **AI-Powered Student Assistant:** Introduce an AI assistant to help students with common academic and administrative queries, improving accessibility and user experience.
-*   **Enhanced UI & UX:** Further improve the user interface and interaction design to make the application more intuitive and mobile-friendly.
+*   **Interactive Campus Map Integration:** Integrate a visual map to guide students directly to specific rooms and buildings.
+*   **Holiday & Academic Calendar Awareness:** Enhance availability logic to automatically account for university holidays and exam schedules.
+*   **Production-Ready Data Integration:** Collaborating with university administration to connect directly with official institutional databases for automated sync.
+*   **Advanced AI Guidance:** Expand the AI assistant's capabilities to handle personalized academic queries and schedule planning.
+*   **UI/UX Enhancements:** Refine the interface for an even more seamless mobile experience.
 
-## 11. Team & Acknowledgements
+---
 
 **Team Beyonders**
-
-*   Ketan (Lead Developer)
-*   Student Contributors
-
-**Acknowledgements**
-
-We would like to thank the organizers of the ATLAS – GDG on Campus Hackathon and the Google Developer Groups community for providing the platform and tools to build this solution.
+Built for the ATLAS – GDG on Campus Hackathon
