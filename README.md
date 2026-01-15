@@ -50,7 +50,7 @@ This project demonstrates the use of **Google technologies** as required for the
 ### Step 1: Clone the Repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/0Ketan/Beyonders-Project
 cd Beyonders-Project
 ```
 
