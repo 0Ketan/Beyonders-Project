@@ -14,7 +14,8 @@ Google Calendar API integration for the GDG Campus Hackathon.
 
 import streamlit as st
 import pandas as pd
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
+from zoneinfo import ZoneInfo
 import requests
 import os
 import google.genai as genai
@@ -58,6 +59,26 @@ if not GEMINI_API_KEY:
     except (FileNotFoundError, KeyError):
         # Key remains None if not found in either
         pass
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# TIMEZONE CONFIGURATION
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+def get_current_ist_time():
+    """
+    Get current time in Indian Standard Time (IST).
+    
+    CRITICAL: Streamlit Cloud runs in UTC timezone.
+    This function ensures consistent IST time across all environments:
+    - Local development (any timezone)
+    - Streamlit Cloud deployment (UTC)
+    
+    Returns:
+        datetime: Current time in Asia/Kolkata timezone (IST)
+    """
+    # Streamlit Cloud runs in UTC; explicitly converting to IST
+    return datetime.now(ZoneInfo("Asia/Kolkata"))
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -158,14 +179,13 @@ def fetch_calendar_events():
     """
     try:
         # Get today's date range in ISO format (required by Google Calendar API)
-        # Using Indian Standard Time (UTC+5:30)
-        ist = timezone(timedelta(hours=5, minutes=30))
-        now = datetime.now(ist)
+        # Streamlit Cloud runs in UTC; explicitly converting to IST
+        now = get_current_ist_time()
         
-        # Start of today (00:00:00)
+        # Start of today (00:00:00 IST)
         time_min = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
         
-        # End of today (23:59:59)
+        # End of today (23:59:59 IST)
         time_max = now.replace(hour=23, minute=59, second=59, microsecond=0).isoformat()
         
         # Build Google Calendar API request URL
@@ -280,9 +300,9 @@ def check_faculty_availability(faculty_name):
     # Weekly holiday: Sunday
     # Faculty unavailable on Sundays
     
-    # Get current time (IST - UTC+5:30)
-    ist = timezone(timedelta(hours=5, minutes=30))
-    now = datetime.now(ist)
+    # Get current time in IST (Asia/Kolkata timezone)
+    # Streamlit Cloud runs in UTC; explicitly converting to IST
+    now = get_current_ist_time()
     current_weekday = now.weekday()  # Monday=0, Sunday=6
     
     # Check if today is Sunday (weekday = 6)
@@ -716,9 +736,10 @@ def display_faculty_details(faculty_name, faculty_df):
         else:
             st.markdown(availability['status'])
         
-        # Show current time
-        now = datetime.now()
-        st.caption(f"Current: {now.strftime('%A, %H:%M')}")
+        # Show current time in IST
+        # Streamlit Cloud runs in UTC; explicitly converting to IST
+        now = get_current_ist_time()
+        st.caption(f"Current: {now.strftime('%A, %H:%M')} IST")
     
     # Clear selection button
     if st.button("← Back to Search Results"):
