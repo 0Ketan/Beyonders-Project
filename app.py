@@ -427,58 +427,81 @@ def search_services(query, services_df):
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def display_home_page():
-    """Display the home page with project description."""
+    """Display the home page with feature cards."""
     
-    st.title("🎓 Campus Assist")
-    st.subheader("Smart Campus Helper")
+    # ═══════════════════════════════════════════════════════════════════════════
+    # WELCOME SECTION (Centered)
+    # ═══════════════════════════════════════════════════════════════════════════
     
+    st.markdown("<h1 style='text-align: center;'>🎓 Campus Assist</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-size: 1.2em; color: #666;'>Your Smart Campus Navigation Helper</p>", unsafe_allow_html=True)
+    
+    st.markdown("")  # Spacing
     st.markdown("---")
+    st.markdown("")  # Spacing
     
-    # Project Description
-    st.markdown("""
-    ### Welcome to Campus Assist!
+    # ═══════════════════════════════════════════════════════════════════════════
+    # FEATURE CARDS (2x2 Grid)
+    # ═══════════════════════════════════════════════════════════════════════════
     
-    Campus Assist helps students navigate campus life more efficiently by providing:
+    st.markdown("### 🌟 Explore Features")
+    st.markdown("")  # Spacing
     
-    - 🔍 **Smart Faculty Search** - Find faculty by name, department, subject, role, or room
-    - ⏰ **Real-time Availability** - Check if faculty are currently available or in class
-    - 🏢 **Campus Services** - Locate offices for administrative tasks
-    - 🔬 **Labs Directory** - Browse campus labs by department and location
+    # Row 1: Find Faculty + Campus Services
+    col1, col2 = st.columns(2, gap="large")
     
-    ### 🌟 Google Technology Integration
+    with col1:
+        with st.container():
+            st.markdown("#### 🔍 Find Faculty")
+            st.markdown("Search for faculty members by name, department, subject, or room. Check real-time availability using Google Calendar integration.")
+            st.markdown("")  # Spacing
+            # Note: Navigation happens via sidebar, so we just display info
     
-    This application demonstrates the power of Google technologies:
+    with col2:
+        with st.container():
+            st.markdown("#### 🏢 Campus Services")
+            st.markdown("Locate administrative offices and campus services. Find the right office for bonafide certificates, fee payments, admissions, and more.")
+            st.markdown("")  # Spacing
     
-    #### 📊 Google Sheets as Live Backend
-    - All faculty data is stored in **Google Sheets**
-    - Data syncs in real-time - no hardcoded information
-    - Easy to update and maintain by campus administrators
-    - Collaborative editing capabilities
+    st.markdown("")  # Spacing between rows
     
-    #### 📅 Google Calendar Integration
-    - Faculty availability is fetched from **Google Calendar API**
-    - Live teaching events from shared public calendar
-    - Real-time availability checking
-    - Event titles automatically parsed to identify faculty
+    # Row 2: Labs Directory + AI Assistant
+    col3, col4 = st.columns(2, gap="large")
     
-    ### 🚀 How It Works
+    with col3:
+        with st.container():
+            st.markdown("#### 🔬 Labs Directory")
+            st.markdown("Browse campus labs by department and location. View lab details, working hours, and available facilities.")
+            st.markdown("")  # Spacing
     
-    1. **Data Source**: Faculty information is maintained in Google Sheets
-    2. **Live Sync**: The app fetches fresh data every time you search
-    3. **Smart Search**: Type any keyword to find faculty instantly
-    4. **Availability Check**: Real-time queries to Google Calendar API to check teaching events
+    with col4:
+        with st.container():
+            st.markdown("#### 🤖 AI Assistant")
+            st.markdown("Ask questions about campus facilities, faculty, services, and procedures. Get instant AI-powered answers using Google Gemini.")
+            st.markdown("")  # Spacing
     
-    ### 📱 Get Started
+    st.markdown("")  # Spacing
+    st.markdown("---")
+    st.markdown("")  # Spacing
     
-    Use the sidebar to navigate:
-    - **Find Faculty** - Search for faculty and check availability
-    - **Campus Services** - Browse campus office locations
-    - **Labs Directory** - Find campus labs and their details
+    # ═══════════════════════════════════════════════════════════════════════════
+    # TECH STACK INFO (Collapsed by default)
+    # ═══════════════════════════════════════════════════════════════════════════
     
-    ---
+    with st.expander("🌟 Powered by Google Technologies"):
+        st.markdown("""
+        **📊 Google Sheets** - Live data backend for faculty, services, and labs  
+        **📅 Google Calendar API** - Real-time faculty availability tracking  
+        **🤖 Google Gemini AI** - Intelligent campus assistant  
+        
+        All data syncs in real-time with no hardcoded information!
+        """)
     
-    **Built for GDG Campus Hackathon** | Powered by Google Sheets & Streamlit
-    """)
+    st.markdown("")  # Spacing
+    
+    # Footer
+    st.markdown("---")
+    st.markdown("<p style='text-align: center; color: #888;'>Built for GDG Campus Hackathon | Powered by Google & Streamlit</p>", unsafe_allow_html=True)
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -486,9 +509,10 @@ def display_home_page():
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def display_find_faculty_page():
-    """Display the Find Faculty page with search and availability checking."""
+    """Display the Find Faculty page with search and card-based results."""
     
     st.title("🔍 Find Faculty")
+    st.markdown("")
     
     # Load data from Google Sheets
     faculty_df = load_faculty_data()
@@ -503,15 +527,16 @@ def display_find_faculty_page():
     
     # Display data source indicator
     st.success("📊 Data synced live from Google Sheets")
+    st.markdown("")
     
-    st.markdown("---")
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SEARCH BAR (Full Width)
+    # ═══════════════════════════════════════════════════════════════════════════
     
-    # Search Bar
-    st.markdown("### Search Faculty")
     search_query = st.text_input(
-        "Search by name, department, subject, role, or room",
+        "🔍 Search Faculty",
         placeholder="e.g., Computer Science, DBMS, HOD, CS-201",
-        help="Type any keyword to search across all fields"
+        help="Search by name, department, subject, role, or room"
     )
     
     # Perform search
@@ -521,33 +546,76 @@ def display_find_faculty_page():
         results_df = faculty_df
     
     st.markdown(f"**Found {len(results_df)} faculty member(s)**")
+    st.markdown("")
     
-    # Display results
+    # ═══════════════════════════════════════════════════════════════════════════
+    # FACULTY CARDS (2 per row)
+    # ═══════════════════════════════════════════════════════════════════════════
+    
     if results_df.empty:
         st.warning("No faculty found matching your search.")
     else:
-        # Display results as clickable list
-        st.markdown("### Search Results")
+        # Display results as cards in 2-column grid
+        results_list = results_df.to_dict('records')
         
-        # Create columns for better layout
-        for idx, row in results_df.iterrows():
-            with st.container():
-                col1, col2 = st.columns([3, 1])
-                
-                with col1:
-                    # Display faculty info
-                    st.markdown(f"**{row['Name']}**")
-                    st.caption(f"{row['Department']} | {row['Role']}")
-                
+        # Process in pairs for 2-column layout
+        for i in range(0, len(results_list), 2):
+            col1, col2 = st.columns(2, gap="medium")
+            
+            # First card
+            with col1:
+                faculty = results_list[i]
+                with st.container():
+                    # Faculty Name (Bold, Larger)
+                    st.markdown(f"### {faculty['Name']}")
+                    
+                    # Department and Role
+                    st.markdown(f"**{faculty['Department']}** | {faculty['Role']}")
+                    
+                    # Room
+                    st.markdown(f"📍 Room: {faculty['Room']}")
+                    
+                    # Subject
+                    st.caption(f"Subject: {faculty['Subject']}")
+                    
+                    st.markdown("")
+                    
+                    # View Details Button
+                    if st.button("View Details", key=f"faculty_btn_{i}", use_container_width=True):
+                        st.session_state['selected_faculty'] = faculty['Name']
+                        st.rerun()
+                    
+                    st.markdown("")
+            
+            # Second card (if exists)
+            if i + 1 < len(results_list):
                 with col2:
-                    # Button to view details
-                    if st.button("View Details", key=f"btn_{idx}"):
-                        st.session_state['selected_faculty'] = row['Name']
-                
-                st.markdown("---")
+                    faculty = results_list[i + 1]
+                    with st.container():
+                        # Faculty Name (Bold, Larger)
+                        st.markdown(f"### {faculty['Name']}")
+                        
+                        # Department and Role
+                        st.markdown(f"**{faculty['Department']}** | {faculty['Role']}")
+                        
+                        # Room
+                        st.markdown(f"📍 Room: {faculty['Room']}")
+                        
+                        # Subject
+                        st.caption(f"Subject: {faculty['Subject']}")
+                        
+                        st.markdown("")
+                        
+                        # View Details Button
+                        if st.button("View Details", key=f"faculty_btn_{i+1}", use_container_width=True):
+                            st.session_state['selected_faculty'] = faculty['Name']
+                            st.rerun()
+                        
+                        st.markdown("")
         
         # Display selected faculty details
         if 'selected_faculty' in st.session_state and st.session_state['selected_faculty']:
+            st.markdown("---")
             display_faculty_details(st.session_state['selected_faculty'], faculty_df)
 
 
@@ -602,9 +670,10 @@ def display_faculty_details(faculty_name, faculty_df):
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def display_campus_services_page():
-    """Display the Campus Services page with live data from Google Sheets."""
+    """Display the Campus Services page with card-based layout."""
     
     st.title("🏢 Campus Services")
+    st.markdown("")
     
     # Load data
     services_df = load_services_data()
@@ -619,15 +688,16 @@ def display_campus_services_page():
 
     # Display data source indicator
     st.success("📊 Data synced live from Google Sheets")
-    st.markdown("Find the right office for your needs")
-    st.markdown("---")
+    st.markdown("")
 
-    # Search Bar
-    st.markdown("### Search Services")
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SEARCH BAR (Full Width)
+    # ═══════════════════════════════════════════════════════════════════════════
+
     search_query = st.text_input(
-        "Search by service name, office, room, or description",
+        "🔍 Search Services",
         placeholder="e.g., Bonafide, Fee, Admission, Accounts",
-        help="Type any keyword to search for campus services"
+        help="Search by service name, office, room, or description"
     )
     
     # Perform search
@@ -637,43 +707,72 @@ def display_campus_services_page():
         results_df = services_df
     
     st.markdown(f"**Found {len(results_df)} service(s)**")
+    st.markdown("")
     
-    # Display results
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SERVICE CARDS (2 per row)
+    # ═══════════════════════════════════════════════════════════════════════════
+    
     if results_df.empty:
         st.warning("No services found matching your search.")
     else:
-        st.markdown("---")
-
+        # Display results as cards in 2-column grid
+        results_list = results_df.to_dict('records')
         
-        # Service Selector (dropdown)
-        service_names = results_df['Service'].unique().tolist()
-        selected_service_name = st.selectbox(
-            "Select a Service",
-            options=service_names,
-            help="Choose a service to view detailed information"
-        )
-    
-        if selected_service_name:
-            # Get details for selected service
-            service_info = results_df[results_df['Service'] == selected_service_name].iloc[0]
+        # Process in pairs for 2-column layout
+        for i in range(0, len(results_list), 2):
+            col1, col2 = st.columns(2, gap="medium")
             
-            # Display details in a nice card-like layout
-            with st.container():
-                st.markdown("---")
-                st.markdown(f"### {service_info['Service']}")
-                
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    st.markdown(f"**📍 Office:** {service_info['Office']}")
-                    st.markdown(f"**🚪 Room:** {service_info['Room']}")
-                
+            # First card
+            with col1:
+                service = results_list[i]
+                with st.container():
+                    # Service Name (Bold, Larger)
+                    st.markdown(f"### {service['Service']}")
+                    
+                    # Office
+                    st.markdown(f"**📍 {service['Office']}**")
+                    
+                    # Room
+                    st.markdown(f"🚪 Room: {service['Room']}")
+                    
+                    # Working Hours
+                    st.caption(f"🕒 {service['Working Hours']}")
+                    
+                    st.markdown("")
+                    
+                    # Description in expander
+                    with st.expander("View Details"):
+                        st.write(service['Description'])
+                    
+                    st.markdown("")
+            
+            # Second card (if exists)
+            if i + 1 < len(results_list):
                 with col2:
-                    st.markdown(f"**🕒 Working Hours:** {service_info['Working Hours']}")
-                
-                st.markdown("---")
-                st.markdown("#### Description")
-                st.write(service_info['Description'])
+                    service = results_list[i + 1]
+                    with st.container():
+                        # Service Name (Bold, Larger)
+                        st.markdown(f"### {service['Service']}")
+                        
+                        # Office
+                        st.markdown(f"**📍 {service['Office']}**")
+                        
+                        # Room
+                        st.markdown(f"🚪 Room: {service['Room']}")
+                        
+                        # Working Hours
+                        st.caption(f"🕒 {service['Working Hours']}")
+                        
+
+
+                        st.markdown("")
+                        
+                        # Description in expander
+                        with st.expander("View Details"):
+                            st.write(service['Description'])
+                        
+                        st.markdown("")
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -681,9 +780,10 @@ def display_campus_services_page():
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def display_labs_directory_page():
-    """Display the Labs Directory page with live data from Google Sheets."""
+    """Display the Labs Directory page with card-based layout."""
     
     st.title("🔬 Labs Directory")
+    st.markdown("")
     
     # Load data from Google Sheets
     labs_df = load_labs_data()
@@ -698,15 +798,16 @@ def display_labs_directory_page():
 
     # Display data source indicator
     st.success("📊 Data synced live from Google Sheets")
-    st.markdown("Find labs by name or department")
-    st.markdown("---")
+    st.markdown("")
 
-    # Search Bar
-    st.markdown("### Search Labs")
+    # ═══════════════════════════════════════════════════════════════════════════
+    # SEARCH BAR (Full Width)
+    # ═══════════════════════════════════════════════════════════════════════════
+
     search_query = st.text_input(
-        "Search by lab name, department, building, room, or description",
+        "🔍 Search Labs",
         placeholder="e.g., Computer Lab, CSE, Block A, Lab-101",
-        help="Type any keyword to search for labs"
+        help="Search by lab name, department, building, room, or description"
     )
     
     # Perform search
@@ -716,43 +817,70 @@ def display_labs_directory_page():
         results_df = labs_df
     
     st.markdown(f"**Found {len(results_df)} lab(s)**")
+    st.markdown("")
     
-    # Display results
+    # ═══════════════════════════════════════════════════════════════════════════
+    # LAB CARDS (2 per row)
+    # ═══════════════════════════════════════════════════════════════════════════
+    
     if results_df.empty:
         st.warning("No labs found matching your search.")
     else:
-        st.markdown("---")
+        # Display results as cards in 2-column grid
+        results_list = results_df.to_dict('records')
         
-        # Lab Selector (dropdown)
-        lab_names = results_df['Lab Name'].unique().tolist()
-        selected_lab_name = st.selectbox(
-            "Select a Lab",
-            options=lab_names,
-            help="Choose a lab to view detailed information"
-        )
-        
-        if selected_lab_name:
-            # Get details for selected lab
-            lab_info = results_df[results_df['Lab Name'] == selected_lab_name].iloc[0]
+        # Process in pairs for 2-column layout
+        for i in range(0, len(results_list), 2):
+            col1, col2 = st.columns(2, gap="medium")
             
-            # Display details in a nice card-like layout
-            with st.container():
-                st.markdown("---")
-                st.markdown(f"### {lab_info['Lab Name']}")
-                
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    st.markdown(f"**🏛️ Department:** {lab_info['Department']}")
-                    st.markdown(f"**🏢 Building:** {lab_info['Building']}")
-                    st.markdown(f"**🚪 Room:** {lab_info['Room']}")
-                
+            # First card
+            with col1:
+                lab = results_list[i]
+                with st.container():
+                    # Lab Name (Bold, Larger)
+                    st.markdown(f"### {lab['Lab Name']}")
+                    
+                    # Department
+                    st.markdown(f"**🏛️ {lab['Department']}**")
+                    
+                    # Building and Room
+                    st.markdown(f"📍 {lab['Building']}, Room: {lab['Room']}")
+                    
+                    # Working Hours
+                    st.caption(f"🕒 {lab['Working Hours']}")
+                    
+                    st.markdown("")
+                    
+                    # Description in expander
+                    with st.expander("View Details"):
+                        st.write(lab['Description'])
+                    
+                    st.markdown("")
+            
+            # Second card (if exists)
+            if i + 1 < len(results_list):
                 with col2:
-                    st.markdown(f"**🕒 Working Hours:** {lab_info['Working Hours']}")
-                
-                st.markdown("---")
-                st.markdown("#### Description")
-                st.write(lab_info['Description'])
+                    lab = results_list[i + 1]
+                    with st.container():
+                        # Lab Name (Bold, Larger)
+                        st.markdown(f"### {lab['Lab Name']}")
+                        
+                        # Department
+                        st.markdown(f"**🏛️ {lab['Department']}**")
+                        
+                        # Building and Room
+                        st.markdown(f"📍 {lab['Building']}, Room: {lab['Room']}")
+                        
+                        # Working Hours
+                        st.caption(f"🕒 {lab['Working Hours']}")
+                        
+                        st.markdown("")
+                        
+                        # Description in expander
+                        with st.expander("View Details"):
+                            st.write(lab['Description'])
+                        
+                        st.markdown("")
 
 
 
@@ -793,9 +921,10 @@ def display_ai_assistant_page():
             st.code(f"Error configuring Gemini: {str(e)}")
         return
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # ═══════════════════════════════════════════════════════════════════════════
     # STEP 3: Display Introduction
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # ═══════════════════════════════════════════════════════════════════════════
+    st.markdown("")
     st.markdown("""
     I am your AI Campus Assistant! Ask me about:
     - 👨‍🏫 **Faculty** details and roles
@@ -804,21 +933,26 @@ def display_ai_assistant_page():
     - 🎓 **General** college procedures
     """)
     
+    st.markdown("")
     st.markdown("---")
+    st.markdown("")
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # ═══════════════════════════════════════════════════════════════════════════
     # STEP 4: User Input with Form (enables Enter key submission)
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # ═══════════════════════════════════════════════════════════════════════════
     with st.form(key="ai_question_form", clear_on_submit=False):
-        user_question = st.text_input(
-            "How can I help you today?",
+        user_question = st.text_area(
+            "💬 Ask your question:",
             placeholder="e.g., Where is the admission office? Who is the HOD of CSE?",
-            help="Type your question and press Enter or click 'Ask AI'",
+            help="Type your question and press Ctrl+Enter or click 'Ask AI'",
+            height=100,
             key="ai_input"
         )
         
+        st.markdown("")  # Spacing
+        
         # Submit button
-        submit_button = st.form_submit_button("Ask AI", type="primary", use_container_width=True)
+        submit_button = st.form_submit_button("🤖 Ask AI", type="primary", use_container_width=True)
     
     # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     # STEP 5: Process Input (with validation)
