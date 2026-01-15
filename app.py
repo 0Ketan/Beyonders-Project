@@ -1,9 +1,15 @@
+
+
+
+
+
+
 """
 Campus Assist - Streamlit Web Application
 A smart campus helper for finding faculty and checking availability
 
 This application uses Google Sheets as a live data source and demonstrates
-Google Calendar-based availability checking for the GDG Campus Hackathon.
+Google Calendar API integration for the GDG Campus Hackathon.
 """
 
 import streamlit as st
@@ -64,7 +70,7 @@ def load_faculty_data():
         df = pd.read_csv(FACULTY_SHEET_URL)
         # Strip whitespace from column names and values
         df.columns = df.columns.str.strip()
-        df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+        df = df.map(lambda x: x.strip() if isinstance(x, str) else x)
         return df
     except Exception as e:
         st.error(f"Error loading faculty data: {e}")
@@ -86,7 +92,7 @@ def load_services_data():
         df = pd.read_csv(SERVICES_SHEET_URL)
         # Strip whitespace from column names and values
         df.columns = df.columns.str.strip()
-        df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+        df = df.map(lambda x: x.strip() if isinstance(x, str) else x)
         return df
     except Exception as e:
         st.error(f"Error loading services data: {e}")
@@ -108,7 +114,7 @@ def load_labs_data():
         df = pd.read_csv(LABS_SHEET_URL)
         # Strip whitespace from column names and values
         df.columns = df.columns.str.strip()
-        df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+        df = df.map(lambda x: x.strip() if isinstance(x, str) else x)
         return df
     except Exception as e:
         st.error(f"Error loading labs data: {e}")

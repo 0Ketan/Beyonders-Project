@@ -12,6 +12,12 @@
 - **📅 Google Calendar API** - Availability fetched from live Google Calendar events
 - **🏢 Campus Services** - Directory of campus offices and their locations
 
+### 🌐 Live Demo
+
+**🚀 Deployed App:** [https://beyonders-campus-assist.streamlit.app](https://beyonders-campus-assist.streamlit.app)
+
+> **Note for Judges:** The app is deployed on Streamlit Community Cloud with live Google Sheets and Google Calendar integration. Click the link above to access the demo.
+
 ---
 
 ## 🚀 Google Technology Integration
@@ -217,20 +223,13 @@ Beyonders-Project/
 ├── requirements.txt          # Python dependencies
 ├── .gitignore               # Git ignore file
 ├── README.md                # This file
+├── DEPLOYMENT.md            # Deployment guide
 │
-├── data/                    # Original JSON data (legacy)
-│   ├── faculty.json
-│   ├── timetable.json
-│   └── offices.json
-│
-├── logic/                   # Original availability logic (legacy)
-│   └── availability.py
-│
-└── ui/                      # Original Tkinter UI (legacy)
-    └── app.py
+├── test_data_loading.py     # Production validation tests
+└── test_calendar_api.py     # Google Calendar API test
 ```
 
-**Note:** The `data/`, `logic/`, and `ui/` folders contain the original Tkinter desktop application code. The new web application is entirely in `app.py`.
+**Note:** All data is fetched live from Google Sheets and Google Calendar API. No local data files are used.
 
 ---
 
