@@ -17,7 +17,7 @@ import pandas as pd
 from datetime import datetime, timezone, timedelta
 import requests
 import os
-import google.generativeai as genai
+import google.genai as genai
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # GOOGLE SHEETS CONFIGURATION
@@ -761,25 +761,41 @@ def display_labs_directory_page():
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 def display_ai_assistant_page():
-    """Display the AI Assistant page using Google Gemini."""
+    """Display the AI Assistant page using Google Gemini with production-safe error handling."""
     
     st.title("🤖 Ask Campus Assist (AI)")
     st.markdown("Powered by **Google Gemini**")
     
-    # Check for API Key
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # STEP 1: Check for API Key
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     if not GEMINI_API_KEY:
-        st.warning("⚠️ Google Gemini API Key not found. Please set `GEMINI_API_KEY` in your environment variables or Streamlit secrets.")
-        st.info("To test this feature, you need a valid Google Gemini API key.")
+        st.warning("⚠️ Google Gemini API key is not configured")
+        st.info(
+            "To use this feature, please configure the API key:\n\n"
+            "**For Local Development:**\n"
+            "Set the `GEMINI_API_KEY` environment variable\n\n"
+            "**For Streamlit Cloud:**\n"
+            "Add `GEMINI_API_KEY` to your app secrets"
+        )
         return
 
-    # Initialize Gemini
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # STEP 2: Initialize Gemini (with error handling)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel('gemini-pro')
+        # Create Gemini client with the new google-genai package
+        client = genai.Client(api_key=GEMINI_API_KEY)
     except Exception as e:
-        st.error(f"Error configuring Google Gemini: {e}")
+        st.error("AI assistant is temporarily unavailable. Please try again later.")
+        # Show technical details in expander for debugging
+        with st.expander("Technical Details (for developers)"):
+            st.code(f"Error configuring Gemini: {str(e)}")
         return
 
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # STEP 3: Display Introduction
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     st.markdown("""
     I am your AI Campus Assistant! Ask me about:
     - 👨‍🏫 **Faculty** details and roles
@@ -790,37 +806,119 @@ def display_ai_assistant_page():
     
     st.markdown("---")
 
-    # User Input
-    user_question = st.text_input("How can I help you today?", placeholder="e.g., Where is the admission office? Who is the HOD of CSE?")
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # STEP 4: User Input with Form (enables Enter key submission)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    with st.form(key="ai_question_form", clear_on_submit=False):
+        user_question = st.text_input(
+            "How can I help you today?",
+            placeholder="e.g., Where is the admission office? Who is the HOD of CSE?",
+            help="Type your question and press Enter or click 'Ask AI'",
+            key="ai_input"
+        )
+        
+        # Submit button
+        submit_button = st.form_submit_button("Ask AI", type="primary", use_container_width=True)
     
-    if st.button("Ask AI", type="primary"):
-        if not user_question:
-            st.warning("Please enter a question.")
-            return
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # STEP 5: Process Input (with validation)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    if submit_button:
+        # Clear previous error
+        st.session_state['ai_error'] = ""
+        
+        # Input validation: Check for empty or whitespace-only input
+        if not user_question or user_question.strip() == "":
+            st.warning("⚠️ Please enter a question before submitting")
+        else:
+            # Store the question in session state
+            st.session_state['ai_last_question'] = user_question.strip()
             
-        with st.spinner("Thinking..."):
-            try:
-                # Context for the AI
-                system_prompt = """
-                You are a helpful campus assistant for a university. 
-                Provide clear, concise, and polite answers to student questions related to college services, academics, and campus facilities.
-                If a question is completely unrelated to college/campus life, politely decline to answer.
-                Keep answers short and helpful.
-                """
-                
-                # Create prompt with context
-                full_prompt = f"{system_prompt}\n\nStudent Question: {user_question}"
-                
-                # Generate response
-                response = model.generate_content(full_prompt)
-                
-                # Display response
-                st.markdown("### 🤖 Response:")
-                st.success(response.text)
-                
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
-                st.markdown("*Note: Please ensure your API key is valid and has access to Gemini API.*")
+            # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            # STEP 6: Call Gemini API (with comprehensive error handling)
+            # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            with st.spinner("🤔 Thinking..."):
+                try:
+                    # Context for the AI
+                    system_instruction = """
+                    You are a helpful campus assistant for a university. 
+                    Provide clear, concise, and polite answers to student questions related to college services, academics, and campus facilities.
+                    If a question is completely unrelated to college/campus life, politely decline to answer.
+                    Keep answers short and helpful.
+                    """
+                    
+                    # Generate response using new API
+                    response = client.models.generate_content(
+                        model='gemini-flash-latest',
+                        contents=f"{system_instruction}\n\nStudent Question: {user_question}"
+                    )
+                    
+                    # Check if response is valid
+                    if response and response.text:
+                        # Store response in session state for persistence
+                        st.session_state['ai_last_response'] = response.text
+                    else:
+                        # Handle empty response
+                        st.session_state['ai_error'] = "empty_response"
+                        st.session_state['ai_last_response'] = ""
+                    
+                except Exception as e:
+                    # Comprehensive error handling - catch all API errors
+                    error_type = type(e).__name__
+                    
+                    # Store error in session state
+                    st.session_state['ai_error'] = "api_error"
+                    st.session_state['ai_last_response'] = ""
+                    
+                    # Log error for debugging (optional - only visible in terminal)
+                    print(f"[AI Assistant Error] {error_type}: {str(e)}")
+    
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # STEP 7: Display Response (persisted across reruns)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    
+    # Add spacing
+    st.markdown("")
+    
+    # Display last response if available
+    if st.session_state.get('ai_last_response'):
+        st.markdown("### 🤖 Response:")
+        
+        # Display response in a nice container (dark mode compatible)
+        with st.container():
+            # Use info box for better visibility and dark mode compatibility
+            st.info(st.session_state['ai_last_response'])
+        
+        # Show timestamp
+        st.caption(f"💬 Question: {st.session_state.get('ai_last_question', '')}")
+    
+    # Display error if present
+    elif st.session_state.get('ai_error'):
+        st.markdown("### ⚠️ Error")
+        
+        if st.session_state['ai_error'] == "empty_response":
+            st.error(
+                "AI assistant returned an empty response. "
+                "This might be due to content safety filters. "
+                "Please try rephrasing your question."
+            )
+        elif st.session_state['ai_error'] == "api_error":
+            st.error(
+                "AI assistant is temporarily unavailable. Please try again later.\n\n"
+                "If this issue persists, please check your internet connection or API key."
+            )
+    
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # STEP 8: Example Questions (for better UX)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    with st.expander("💡 Example Questions"):
+        st.markdown("""
+        - Where is the admission office located?
+        - Who is the HOD of Computer Science department?
+        - What are the working hours for the library?
+        - How do I get a bonafide certificate?
+        - Where can I find the CSE lab?
+        """)
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -830,9 +928,17 @@ def display_ai_assistant_page():
 def main():
     """Main application entry point."""
     
-    # Initialize session state
+    # Initialize session state for faculty selection
     if 'selected_faculty' not in st.session_state:
         st.session_state['selected_faculty'] = None
+    
+    # Initialize session state for AI assistant
+    if 'ai_last_question' not in st.session_state:
+        st.session_state['ai_last_question'] = ""
+    if 'ai_last_response' not in st.session_state:
+        st.session_state['ai_last_response'] = ""
+    if 'ai_error' not in st.session_state:
+        st.session_state['ai_error'] = ""
     
     # Sidebar Navigation
     st.sidebar.title("🎓 Campus Assist")
